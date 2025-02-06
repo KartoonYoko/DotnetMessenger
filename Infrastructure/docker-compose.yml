@@ -14,3 +14,19 @@
       interval: 1s
       timeout: 5s
       retries: 10
+      
+  # https://docs.datalust.co/docs/getting-started-with-docker
+  seq:
+    image: datalust/seq
+    ports:
+      - "5341:80"
+    environment:
+      - "ACCEPT_EULA=Y"
+      # commands:
+      #   - for windows powershell: $PH = '<password>' | docker run --rm -i datalust/seq config hash        
+      #   - for linux: PH=$(echo '<password>' | docker run --rm -i datalust/seq config hash)
+      # to set an initial password for the admin user account; 
+      # replace <password> with your desired password; 
+      # the first line above stores a cryptographic hash of the password into the environment variable $PH (bash syntax);
+      # hashed "admin" string: QEGOdfyMit68wWx8hzr0VT3JmNt/LT9HlERYsguNJzGLtvQIyizvecNaidRMWAblwnFImfoFx/O1nR6aONeEgsKMxqDd+oxSZgsRRfHKH7Gg
+      - "SEQ_FIRSTRUN_ADMINPASSWORDHASH=QEGOdfyMit68wWx8hzr0VT3JmNt/LT9HlERYsguNJzGLtvQIyizvecNaidRMWAblwnFImfoFx/O1nR6aONeEgsKMxqDd+oxSZgsRRfHKH7Gg"
