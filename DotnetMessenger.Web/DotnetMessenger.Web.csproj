@@ -21,8 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Authentication\Logout\" />
-      <Folder Include="Features\Authentication\RefreshTokens\" />
       <Folder Include="Features\Chats\" />
       <Folder Include="Features\Chat\" />
       <Folder Include="Features\Messages\GetChatMessages\" />

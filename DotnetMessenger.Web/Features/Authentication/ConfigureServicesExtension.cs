@@ -1,4 +1,6 @@
 ﻿using DotnetMessenger.Web.Features.Authentication.Login;
+using DotnetMessenger.Web.Features.Authentication.Logout;
+using DotnetMessenger.Web.Features.Authentication.RefreshTokens;
 using DotnetMessenger.Web.Features.Authentication.Register;
 
 namespace DotnetMessenger.Web.Features.Authentication;
@@ -9,6 +11,8 @@ public static class ConfigureServicesExtension
     {
         services.AddScoped<RegisterFeature>();
         services.AddScoped<LoginFeature>();
+        services.AddScoped<LogoutFeature>();
+        services.AddScoped<RefreshTokensFeature>();
         
         return services;
     }
