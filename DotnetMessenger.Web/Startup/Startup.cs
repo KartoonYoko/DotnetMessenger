@@ -1,4 +1,5 @@
 ﻿using DotnetMessenger.Web.Common.Services;
+using DotnetMessenger.Web.Data.Context;
 using DotnetMessenger.Web.Endpoints;
 using DotnetMessenger.Web.Features;
 
@@ -19,8 +20,9 @@ public static partial class Startup
         services.ConfigureCommonServices(configuration);
     }
 
-    public static void Configure(this WebApplication app)
+    public static async Task ConfigureAsync(this WebApplication app)
     {
+        await app.InitialiseDatabaseAsync();
         app.UseAuthenticationAndAuthorization();
         app.UseOpenApi();
         app.MapEndpoints();

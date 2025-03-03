@@ -1,5 +1,4 @@
-﻿using DotnetMessenger.Web.BackgroundServices;
-using DotnetMessenger.Web.Data.Context;
+﻿using DotnetMessenger.Web.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetMessenger.Web.Startup;
@@ -19,6 +18,6 @@ public static partial class Startup
                 .UseSnakeCaseNamingConvention();
         });
 
-        services.AddHostedService<MigrationBackgroundService>();
+        services.AddScoped<ApplicationDbContextInitializer>();
     }
 }

@@ -32,7 +32,7 @@ try
 
     var app = builder.Build();
 
-    app.Configure();
+    await app.ConfigureAsync();
 
     app.Run();
 }
