@@ -14,6 +14,7 @@ public static partial class Startup
         services.AddDatabase(configuration);
         services.AddAuthenticationAndAuthorization(configuration);
         services.AddLogging();
+        services.AddOpenApiConfiguration();
         services.ConfigureFeatureServices();
         services.ConfigureCommonServices(configuration);
     }
@@ -21,6 +22,7 @@ public static partial class Startup
     public static void Configure(this WebApplication app)
     {
         app.UseAuthenticationAndAuthorization();
+        app.UseOpenApi();
         app.MapEndpoints();
     }
     
