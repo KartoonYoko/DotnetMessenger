@@ -9,8 +9,8 @@ Log.Logger = new LoggerConfiguration()
     {  
         const string serviceName = "dotnet.messenger.web";
         
-        x.Endpoint = "http://localhost:5341/ingest/otlp/v1/logs";
-        // x.Endpoint = "http://localhost:3100/otlp";
+        // x.Endpoint = "http://localhost:5341/ingest/otlp/v1/logs";
+        x.Endpoint = "http://localhost:4318";
         x.Protocol = OtlpProtocol.HttpProtobuf;
         x.Headers = new Dictionary<string, string>()
         {

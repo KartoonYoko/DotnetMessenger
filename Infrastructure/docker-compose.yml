@@ -30,3 +30,10 @@
       # the first line above stores a cryptographic hash of the password into the environment variable $PH (bash syntax);
       # hashed "admin" string: QEGOdfyMit68wWx8hzr0VT3JmNt/LT9HlERYsguNJzGLtvQIyizvecNaidRMWAblwnFImfoFx/O1nR6aONeEgsKMxqDd+oxSZgsRRfHKH7Gg
       - "SEQ_FIRSTRUN_ADMINPASSWORDHASH=QEGOdfyMit68wWx8hzr0VT3JmNt/LT9HlERYsguNJzGLtvQIyizvecNaidRMWAblwnFImfoFx/O1nR6aONeEgsKMxqDd+oxSZgsRRfHKH7Gg"
+        
+  observe:
+    image: grafana/otel-lgtm
+    ports:
+      - "4318:4318"
+      - "4317:4317"
+      - "3000:3000"
