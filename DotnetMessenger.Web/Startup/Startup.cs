@@ -7,14 +7,19 @@ namespace DotnetMessenger.Web.Startup;
 
 public static partial class Startup
 {
+    private static string ServiceName => "DotnetMessenger.Web";
+    
+    private static string ServiceVersion => "0.0.1";
+    
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
+
+        builder.AddTelemetry();
         
         services.AddDatabase(configuration);
         services.AddAuthenticationAndAuthorization(configuration);
-        services.AddLogging();
         services.AddOpenApiConfiguration();
         services.ConfigureFeatureServices();
         services.ConfigureCommonServices(configuration);
