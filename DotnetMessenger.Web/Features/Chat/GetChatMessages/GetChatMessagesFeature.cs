@@ -15,6 +15,7 @@ public record GetChatMessagesResponse(List<MessageModel> Messages);
 public record MessageModel(
     long MessageId, 
     long UserId,
+    DateTime CreatedAt,
     string Text);
 
 public class GetChatMessagesFeature(ApplicationDbContext context)
@@ -55,6 +56,7 @@ public class GetChatMessagesFeature(ApplicationDbContext context)
             var messageModel = new MessageModel(
                 message.Id,
                 message.CreatedBy,
+                message.CreatedAt,
                 message.Text ?? string.Empty);
             
             messagesModels.Add(messageModel);

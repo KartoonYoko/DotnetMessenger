@@ -1,6 +1,6 @@
 ﻿using DotnetMessenger.Web.Endpoints.Authentication;
-using DotnetMessenger.Web.Endpoints.Message;
-using DotnetMessenger.Web.Endpoints.Messages;
+using DotnetMessenger.Web.Endpoints.Chat;
+using DotnetMessenger.Web.Endpoints.Chats;
 
 namespace DotnetMessenger.Web.Endpoints;
 
@@ -12,8 +12,8 @@ public static class EndpointsExtension
 
         var mainGroup = app.MapGroup("/api");
         
-        mainGroup.MapMessageEndpoints();
-        mainGroup.MapMessagesEndpoints();
+        mainGroup.MapChatsEndpoints();
+        mainGroup.MapChatEndpoints();
         mainGroup.MapAuthenticationEndpoints();
     }
 }

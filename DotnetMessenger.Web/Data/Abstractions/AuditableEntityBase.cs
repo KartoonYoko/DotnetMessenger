@@ -5,8 +5,8 @@ namespace DotnetMessenger.Web.Data.Abstractions;
 public abstract class AuditableEntityBase
 {
     public long CreatedBy { get; set; }
-    public required User CreatedByUser { get; set; }
-    public required DateTime CreatedAt { get; set; }
+    public User? CreatedByUser { get; set; }
+    public DateTime CreatedAt { get; set; }
     public long? UpdateBy { get; set; }
     public User? UpdatedByUser { get; set; }
     public DateTime? UpdatedAt { get; set; }
