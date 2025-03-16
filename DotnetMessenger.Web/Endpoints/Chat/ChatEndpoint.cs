@@ -1,4 +1,5 @@
-﻿using DotnetMessenger.Web.Features.Chat.CreateChatMessage;
+﻿using DotnetMessenger.Web.Features.Chat.CreateChat;
+using DotnetMessenger.Web.Features.Chat.CreateChatMessage;
 using DotnetMessenger.Web.Features.Chat.DeleteChatMessage;
 using DotnetMessenger.Web.Features.Chat.GetChatMessages;
 using DotnetMessenger.Web.Features.Chat.UpdateChatMessage;
@@ -12,11 +13,13 @@ public static class ChatEndpoint
     {
         var group = mainGroup.MapGroup("/chat");
 
+        group.MapPost("", CreateChatFeature);
         group.MapPost("/get-chat-messages", GetChatMessages);
         
-        group.MapPost("", CreateChatMessage);
-        group.MapDelete("", DeleteChatMessage);
-        group.MapPut("", UpdateChatMessage);
+        
+        group.MapPost("/message", CreateChatMessage);
+        group.MapDelete("/message", DeleteChatMessage);
+        group.MapPut("/message", UpdateChatMessage);
     }
     
     private static async Task<IResult> GetChatMessages(
@@ -65,5 +68,15 @@ public static class ChatEndpoint
             cancellationToken);
             
         return Results.Ok();
+    }
+
+    private static async Task<IResult> CreateChatFeature(
+        [FromServices] CreateChatFeature service,
+        [FromBody] CreateChatRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await service.CreateChatAsync(request, cancellationToken);
+        
+        return Results.Ok(result);
     }
 }
