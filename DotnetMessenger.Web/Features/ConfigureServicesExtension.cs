@@ -1,5 +1,7 @@
 ﻿using DotnetMessenger.Web.Features.Authentication;
+using DotnetMessenger.Web.Features.Chat;
 using DotnetMessenger.Web.Features.Chats;
+using DotnetMessenger.Web.Features.Users;
 
 namespace DotnetMessenger.Web.Features;
 
@@ -9,6 +11,8 @@ public static class ConfigureServicesExtension
     {
         services.AddAuthenticationFeatures();
         services.AddChatsFeatures();
+        services.AddChatFeatures();
+        services.AddUsersFeatures();
         
         return services;
     }

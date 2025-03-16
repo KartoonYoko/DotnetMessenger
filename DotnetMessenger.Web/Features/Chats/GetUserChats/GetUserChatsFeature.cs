@@ -12,8 +12,7 @@ public record GetUserChatsResponse(List<ChatModel> Chats);
 
 public class ChatModel(long Id, string Title);
 
-public class GetUserChatsFeature(
-    ApplicationDbContext context)
+public class GetUserChatsFeature(ApplicationDbContext context)
 {
     public async Task<GetUserChatsResponse> GetUserChatsAsync(
         GetUserChatsRequest request,
