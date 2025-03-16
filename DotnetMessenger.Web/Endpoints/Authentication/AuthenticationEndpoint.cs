@@ -11,7 +11,7 @@ namespace DotnetMessenger.Web.Endpoints.Authentication;
 
 public static class AuthenticationEndpoint
 {
-    public static void MapAuthenticationEndpoints(this RouteGroupBuilder mainGroup)
+    public static RouteGroupBuilder MapAuthenticationEndpoints(this RouteGroupBuilder mainGroup)
     {
         var group = mainGroup.MapGroup("/authentication");
 
@@ -19,6 +19,8 @@ public static class AuthenticationEndpoint
         group.MapPost("/login", Login);
         group.MapPost("/logout", Logout);
         group.MapPost("/refresh-token", RefreshToken);
+
+        return group;
     }
     
     private static async Task<IResult> RefreshToken(

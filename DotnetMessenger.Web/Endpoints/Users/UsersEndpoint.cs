@@ -5,11 +5,13 @@ namespace DotnetMessenger.Web.Endpoints.Users;
 
 public static class UsersEndpoint
 {
-    public static void MapUsersEndpoints(this RouteGroupBuilder mainGroup)
+    public static RouteGroupBuilder MapUsersEndpoints(this RouteGroupBuilder mainGroup)
     {
         var group = mainGroup.MapGroup("/users");
 
         group.MapGet("", GetUserChats);
+        
+        return group;
     }
     
     private static async Task<IResult> GetUserChats(

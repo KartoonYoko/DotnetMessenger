@@ -1,5 +1,6 @@
 ﻿using DotnetMessenger.Web.Common.Services.JwtServices;
 using DotnetMessenger.Web.Common.Services.PasswordHasher;
+using DotnetMessenger.Web.Common.Services.UserManager;
 
 namespace DotnetMessenger.Web.Common.Services;
 
@@ -11,6 +12,7 @@ public static class ConfigureCommonServicesExtension
     {
         services.AddJwtServices(configuration);
         services.AddPasswordHasherServices(configuration);
+        services.AddScoped<UserManagerService>();
 
         return services;
     }

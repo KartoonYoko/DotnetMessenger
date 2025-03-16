@@ -17,7 +17,8 @@ public static partial class Startup
         var services = builder.Services;
 
         builder.AddTelemetry();
-        
+
+        services.AddHttpContextAccessor();
         services.AddDatabase(configuration);
         services.AddAuthenticationAndAuthorization(configuration);
         services.AddOpenApiConfiguration();

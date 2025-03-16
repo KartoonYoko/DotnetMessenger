@@ -9,17 +9,18 @@ namespace DotnetMessenger.Web.Endpoints.Chat;
 
 public static class ChatEndpoint
 {
-    public static void MapChatEndpoints(this RouteGroupBuilder mainGroup)
+    public static RouteGroupBuilder MapChatEndpoints(this RouteGroupBuilder mainGroup)
     {
         var group = mainGroup.MapGroup("/chat");
 
         group.MapPost("", CreateChatFeature);
         group.MapPost("/get-chat-messages", GetChatMessages);
         
-        
         group.MapPost("/message", CreateChatMessage);
         group.MapDelete("/message", DeleteChatMessage);
         group.MapPut("/message", UpdateChatMessage);
+
+        return group;
     }
     
     private static async Task<IResult> GetChatMessages(

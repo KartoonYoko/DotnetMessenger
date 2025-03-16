@@ -1,14 +1,16 @@
-﻿using DotnetMessenger.Web.Data.Context;
+﻿using DotnetMessenger.Web.Common.Services.UserManager;
+using DotnetMessenger.Web.Data.Context;
 using DotnetMessenger.Web.Data.Entities;
 
 namespace DotnetMessenger.Web.Features.Chat.CreateChat;
 
 public record CreateChatRequest(
     string ChatTitle,
-    long ChatWithUserId,
-    long CreateByUserId);
+    long ChatWithUserId);
 
-public class CreateChatFeature(ApplicationDbContext context)
+public class CreateChatFeature(
+    ApplicationDbContext context,
+    UserManagerService userManagerService)
 {
     public async Task<long> CreateChatAsync(
         CreateChatRequest request,
@@ -32,7 +34,7 @@ public class CreateChatFeature(ApplicationDbContext context)
         var userCreateChat = new ChatUser
         {
             Chat = newChat,
-            UserId = request.CreateByUserId
+            UserId = userManagerService.GetRequiredUserId()
         };
         
         await context.ChatUsers.AddAsync(userCreateChat, cancellationToken);

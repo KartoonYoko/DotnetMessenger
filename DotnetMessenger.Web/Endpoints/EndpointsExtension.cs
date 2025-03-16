@@ -13,9 +13,9 @@ public static class EndpointsExtension
 
         var mainGroup = app.MapGroup("/api");
 
-        mainGroup.MapUsersEndpoints();
-        mainGroup.MapChatsEndpoints();
-        mainGroup.MapChatEndpoints();
         mainGroup.MapAuthenticationEndpoints();
+        mainGroup.MapUsersEndpoints().RequireAuthorization();
+        mainGroup.MapChatsEndpoints().RequireAuthorization();
+        mainGroup.MapChatEndpoints().RequireAuthorization();
     }
 }
