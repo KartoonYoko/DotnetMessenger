@@ -1,12 +1,11 @@
-﻿using DotnetMessenger.Web.Data.Context;
+﻿using DotnetMessenger.Web.Common.Services.UserManager;
+using DotnetMessenger.Web.Data.Context;
 using DotnetMessenger.Web.Features.Chat.GetChatMessages.Errors;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetMessenger.Web.Features.Chat.GetChatMessages;
 
 public record GetChatMessagesRequest(
-    long UserId, 
-    long ChatId,
     int Skip,
     int Take);
 
@@ -18,7 +17,9 @@ public record MessageModel(
     DateTime CreatedAt,
     string Text);
 
-public class GetChatMessagesFeature(ApplicationDbContext context)
+public class GetChatMessagesFeature(
+    ApplicationDbContext context,
+    UserManagerService userManager)
 {
     /// <summary>
     /// 
@@ -29,12 +30,13 @@ public class GetChatMessagesFeature(ApplicationDbContext context)
     /// <exception cref="UserHasNotAccessToChatException"></exception>
     public async Task<GetChatMessagesResponse> GetChatMessagesAsync(
         GetChatMessagesRequest request,
+        long chatId,
         CancellationToken cancellationToken)
     {
         var hasUserChatAccess = await context
             .ChatUsers
-            .Where(x => x.UserId == request.UserId)
-            .Where(x => x.ChatId == request.ChatId)
+            .Where(x => x.UserId == userManager.GetRequiredUserId())
+            .Where(x => x.ChatId == chatId)
             .AnyAsync(cancellationToken);
 
         if (!hasUserChatAccess)
@@ -43,7 +45,7 @@ public class GetChatMessagesFeature(ApplicationDbContext context)
         var messages = await context
             .Messages
             .AsNoTracking()
-            .Where(x => x.ChatId == request.ChatId)
+            .Where(x => x.ChatId == chatId)
             .OrderByDescending(x => x.CreatedAt)
             .Skip(request.Skip)
             .Take(request.Take)

@@ -2,14 +2,17 @@
 using DotnetMessenger.Web.Data.Context;
 using DotnetMessenger.Web.Endpoints;
 using DotnetMessenger.Web.Features;
+using Microsoft.AspNetCore.HttpLogging;
 
 namespace DotnetMessenger.Web.Startup;
 
 public static partial class Startup
 {
-    private static string ServiceName => "DotnetMessenger.Web";
+    private const string ServiceName = "DotnetMessenger.Web";
+
+    private const string ServiceVersion = "0.0.1";
     
-    private static string ServiceVersion => "0.0.1";
+    private const string SourceName = "Source.DotnetMessenger.Web";
     
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
@@ -18,6 +21,14 @@ public static partial class Startup
 
         builder.AddTelemetry();
 
+        services.AddHttpLogging(x =>
+        {
+            x.LoggingFields = HttpLoggingFields.Duration 
+                              | HttpLoggingFields.RequestMethod 
+                              | HttpLoggingFields.RequestPath
+                              | HttpLoggingFields.RequestProtocol
+                              | HttpLoggingFields.ResponseStatusCode;
+        });
         services.AddHttpContextAccessor();
         services.AddDatabase(configuration);
         services.AddAuthenticationAndAuthorization(configuration);
@@ -29,6 +40,7 @@ public static partial class Startup
     public static async Task ConfigureAsync(this WebApplication app)
     {
         await app.InitialiseDatabaseAsync();
+        app.UseHttpLogging();
         app.UseAuthenticationAndAuthorization();
         app.UseOpenApi();
         app.MapEndpoints();

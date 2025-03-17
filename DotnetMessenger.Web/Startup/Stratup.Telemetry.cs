@@ -27,24 +27,20 @@ public static partial class Startup
         var openTelemetryBuilder = builder.Services.AddOpenTelemetry();
         
         openTelemetryBuilder
-            .ConfigureResource(resource => resource.AddService(
-                serviceName: ServiceName,
-                serviceVersion: ServiceVersion));
-        
-        openTelemetryBuilder.WithTracing(tracing => tracing
-                .AddAspNetCoreInstrumentation()
-                .AddEntityFrameworkCoreInstrumentation()
-                .AddOtlpExporter());
-        
-        openTelemetryBuilder.WithMetrics(metrics => metrics
+            .WithTracing(tcb =>
+            {
+                tcb
+                    .AddSource(ServiceName)
+                    .SetResourceBuilder(
+                        ResourceBuilder.CreateDefault()
+                            .AddService(serviceName: ServiceName, serviceVersion: ServiceVersion))
+                    .AddAspNetCoreInstrumentation()
+                    .AddOtlpExporter();
+            })
+            .WithMetrics(metrics => metrics
                 .AddAspNetCoreInstrumentation()
                 .AddOtlpExporter());
 
-        builder.Services.AddSingleton<Tracer>(sp =>
-        {
-            var tracer = sp.GetRequiredService<TracerProvider>();
-            
-            return tracer.GetTracer(ServiceName, ServiceVersion);
-        });
+        builder.Services.AddSingleton(TracerProvider.Default.GetTracer(ServiceName, ServiceVersion));
     }
 }

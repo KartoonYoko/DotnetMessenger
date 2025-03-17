@@ -14,7 +14,7 @@ public static class ChatEndpoint
         var group = mainGroup.MapGroup("/chat");
 
         group.MapPost("", CreateChatFeature);
-        group.MapPost("/get-chat-messages", GetChatMessages);
+        group.MapPost("/{chatId:long}/get-chat-messages", GetChatMessages);
         
         group.MapPost("/message", CreateChatMessage);
         group.MapDelete("/message", DeleteChatMessage);
@@ -25,11 +25,13 @@ public static class ChatEndpoint
     
     private static async Task<IResult> GetChatMessages(
         [FromServices] GetChatMessagesFeature service,
+        [FromRoute] long chatId,
         [FromBody] GetChatMessagesRequest request,
         CancellationToken cancellationToken)
     {
         var result = await service.GetChatMessagesAsync(
             request, 
+            chatId,
             cancellationToken);
             
         return Results.Ok(result);
