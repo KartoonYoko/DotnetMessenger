@@ -1,4 +1,5 @@
 ﻿using DotnetMessenger.Web.Features.Chats.GetUserChats;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetMessenger.Web.Endpoints.Chats;
@@ -14,7 +15,7 @@ public static class ChatsEndpoint
         return group;
     }
     
-    private static async Task<IResult> GetUserChats(
+    private static async Task<Ok<GetUserChatsResponse>> GetUserChats(
         [FromServices] GetUserChatsFeature service,
         [FromBody] GetUserChatsRequest request,
         CancellationToken cancellationToken)
@@ -23,6 +24,6 @@ public static class ChatsEndpoint
             request, 
             cancellationToken);
             
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
 }

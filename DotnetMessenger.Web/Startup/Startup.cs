@@ -2,6 +2,8 @@
 using DotnetMessenger.Web.Data.Context;
 using DotnetMessenger.Web.Endpoints;
 using DotnetMessenger.Web.Features;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpLogging;
 
 namespace DotnetMessenger.Web.Startup;
@@ -21,6 +23,16 @@ public static partial class Startup
 
         builder.AddTelemetry();
 
+        services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+                
+                var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+                context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+            };
+        });
         services.AddHttpLogging(x =>
         {
             x.LoggingFields = HttpLoggingFields.Duration 

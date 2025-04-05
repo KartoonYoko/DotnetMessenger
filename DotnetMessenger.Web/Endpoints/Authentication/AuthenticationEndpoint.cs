@@ -5,6 +5,7 @@ using DotnetMessenger.Web.Features.Authentication.RefreshTokens;
 using DotnetMessenger.Web.Features.Authentication.RefreshTokens.Errors;
 using DotnetMessenger.Web.Features.Authentication.Register;
 using DotnetMessenger.Web.Features.Authentication.Register.Errors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetMessenger.Web.Endpoints.Authentication;
@@ -17,13 +18,13 @@ public static class AuthenticationEndpoint
 
         group.MapPost("/register", Register);
         group.MapPost("/login", Login);
-        group.MapPost("/logout", Logout);
+        group.MapPost("/logout", Logout).RequireAuthorization();
         group.MapPost("/refresh-token", RefreshToken);
 
         return group;
     }
     
-    private static async Task<IResult> RefreshToken(
+    private static async Task<Results<Ok<RefreshTokensResponse>, NotFound>> RefreshToken(
         [FromServices] RefreshTokensFeature service,
         [FromBody] RefreshTokensRequest request,
         CancellationToken cancellationToken)
@@ -34,15 +35,15 @@ public static class AuthenticationEndpoint
                 request, 
                 cancellationToken);
             
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         }
         catch (RefreshTokenOrUserNotFoundException)
         {
-            return Results.NotFound();
+            return TypedResults.NotFound();
         }
     }
     
-    private static async Task<IResult> Logout(
+    private static async Task<Ok> Logout(
         [FromServices] LogoutFeature service,
         [FromBody] LogoutRequest request,
         CancellationToken cancellationToken)
@@ -51,10 +52,10 @@ public static class AuthenticationEndpoint
             request, 
             cancellationToken);
             
-        return Results.Ok();
+        return TypedResults.Ok();
     }
 
-    private static async Task<IResult> Register(
+    private static async Task<Results<Ok<RegisterResponse>, Conflict>> Register(
         [FromServices] RegisterFeature service,
         [FromBody] RegisterRequest request,
         CancellationToken cancellationToken)
@@ -65,18 +66,18 @@ public static class AuthenticationEndpoint
                 request, 
                 cancellationToken);
             
-            return Results.Ok(response);
+            return TypedResults.Ok(response);
         }
         catch (RegisterExceptionBase ex)
         {
             if (ex is LoginAlreadyExistsException)
-                return Results.Conflict();
+                return TypedResults.Conflict();
 
             throw;
         }
     }
 
-    private static async Task<IResult> Login(
+    private static async Task<Results<Ok<LoginResponse>, UnauthorizedHttpResult>> Login(
         [FromServices] LoginFeature service,
         [FromBody] LoginRequest request,
         CancellationToken cancellationToken)
@@ -87,12 +88,12 @@ public static class AuthenticationEndpoint
                 request, 
                 cancellationToken);
             
-            return Results.Ok(result);
+            return TypedResults.Ok(result);
         }
         catch (LoginExceptionBase ex)
         {
             if (ex is UnauthorizedException)
-                return Results.Unauthorized();
+                return TypedResults.Unauthorized();
 
             throw;
         }

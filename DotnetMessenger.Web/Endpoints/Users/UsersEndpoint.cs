@@ -1,4 +1,5 @@
 ﻿using DotnetMessenger.Web.Features.Users.GetUsersPage;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetMessenger.Web.Endpoints.Users;
@@ -9,12 +10,14 @@ public static class UsersEndpoint
     {
         var group = mainGroup.MapGroup("/users");
 
-        group.MapGet("", GetUserChats);
+        group.MapGet("", GetUsers)
+            .WithSummary("Get application users page")
+            .WithDescription("Endpoint allow to get application users by page");
         
         return group;
     }
     
-    private static async Task<IResult> GetUserChats(
+    private static async Task<Ok<List<GetUsersPageResponseItem>>> GetUsers(
         [FromServices] GetUsersPageFeature service,
         [FromQuery] int skip,
         [FromQuery] int take,
@@ -24,6 +27,6 @@ public static class UsersEndpoint
             new GetUsersPageRequest(skip, take), 
             cancellationToken);
             
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
 }

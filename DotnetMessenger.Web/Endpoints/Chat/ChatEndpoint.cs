@@ -3,6 +3,7 @@ using DotnetMessenger.Web.Features.Chat.CreateChatMessage;
 using DotnetMessenger.Web.Features.Chat.DeleteChatMessage;
 using DotnetMessenger.Web.Features.Chat.GetChatMessages;
 using DotnetMessenger.Web.Features.Chat.UpdateChatMessage;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetMessenger.Web.Endpoints.Chat;
@@ -23,7 +24,7 @@ public static class ChatEndpoint
         return group;
     }
     
-    private static async Task<IResult> GetChatMessages(
+    private static async Task<Ok<GetChatMessagesResponse>> GetChatMessages(
         [FromServices] GetChatMessagesFeature service,
         [FromRoute] long chatId,
         [FromBody] GetChatMessagesRequest request,
@@ -34,10 +35,10 @@ public static class ChatEndpoint
             chatId,
             cancellationToken);
             
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
     
-    private static async Task<IResult> CreateChatMessage(
+    private static async Task<Ok<long>> CreateChatMessage(
         [FromServices] CreateChatMessageFeature service,
         [FromBody] CreateChatMessageRequest request,
         CancellationToken cancellationToken)
@@ -46,10 +47,10 @@ public static class ChatEndpoint
             request, 
             cancellationToken);
             
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
     
-    private static async Task<IResult> DeleteChatMessage(
+    private static async Task<Ok> DeleteChatMessage(
         [FromServices] DeleteChatMessageFeature service,
         [FromBody] DeleteChatMessageRequest request,
         CancellationToken cancellationToken)
@@ -58,10 +59,10 @@ public static class ChatEndpoint
             request, 
             cancellationToken);
             
-        return Results.Ok();
+        return TypedResults.Ok();
     }
     
-    private static async Task<IResult> UpdateChatMessage(
+    private static async Task<Ok> UpdateChatMessage(
         [FromServices] UpdateChatMessageFeature service,
         [FromBody] UpdateChatMessageRequest request,
         CancellationToken cancellationToken)
@@ -70,16 +71,16 @@ public static class ChatEndpoint
             request, 
             cancellationToken);
             
-        return Results.Ok();
+        return TypedResults.Ok();
     }
 
-    private static async Task<IResult> CreateChatFeature(
+    private static async Task<Ok<long>> CreateChatFeature(
         [FromServices] CreateChatFeature service,
         [FromBody] CreateChatRequest request,
         CancellationToken cancellationToken)
     {
         var result = await service.CreateChatAsync(request, cancellationToken);
         
-        return Results.Ok(result);
+        return TypedResults.Ok(result);
     }
 }
