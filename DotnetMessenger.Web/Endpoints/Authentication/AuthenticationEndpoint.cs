@@ -16,10 +16,19 @@ public static class AuthenticationEndpoint
     {
         var group = mainGroup.MapGroup("/authentication");
 
-        group.MapPost("/register", Register);
-        group.MapPost("/login", Login);
-        group.MapPost("/logout", Logout).RequireAuthorization();
-        group.MapPost("/refresh-token", RefreshToken);
+        group
+            .MapPost("/register", Register)
+            .WithSummary("Register");
+        group
+            .MapPost("/login", Login)
+            .WithSummary("Login");
+        group
+            .MapPost("/logout", Logout)
+            .WithSummary("Logout")
+            .RequireAuthorization();
+        group
+            .MapPost("/refresh-token", RefreshToken)
+            .WithSummary("Refresh token");
 
         return group;
     }

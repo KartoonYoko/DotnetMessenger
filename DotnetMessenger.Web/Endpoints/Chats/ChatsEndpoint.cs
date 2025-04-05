@@ -10,7 +10,9 @@ public static class ChatsEndpoint
     {
         var group = mainGroup.MapGroup("/chats");
 
-        group.MapPost("/get-user-chats", GetUserChats);
+        group
+            .MapPost("/get-user-chats", GetUserChats)
+            .WithSummary("Get user chats");
 
         return group;
     }

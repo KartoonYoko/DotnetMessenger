@@ -14,12 +14,22 @@ public static class ChatEndpoint
     {
         var group = mainGroup.MapGroup("/chat");
 
-        group.MapPost("", CreateChatFeature);
-        group.MapPost("/{chatId:long}/get-chat-messages", GetChatMessages);
+        group
+            .MapPost("", CreateChatFeature)
+            .WithSummary("Create a new chat");
+        group
+            .MapPost("/{chatId:long}/get-chat-messages", GetChatMessages)
+            .WithSummary("Get chat messages");
         
-        group.MapPost("/message", CreateChatMessage);
-        group.MapDelete("/message", DeleteChatMessage);
-        group.MapPut("/message", UpdateChatMessage);
+        group
+            .MapPost("/message", CreateChatMessage)
+            .WithSummary("Create a new chat message");
+        group
+            .MapDelete("/message", DeleteChatMessage)
+            .WithSummary("Delete chat message");
+        group
+            .MapPut("/message", UpdateChatMessage)
+            .WithSummary("Update chat message");
 
         return group;
     }
