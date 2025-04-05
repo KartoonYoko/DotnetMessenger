@@ -19,7 +19,7 @@ public static partial class Startup
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "Введите JWT токен в формате: Bearer {your token}"
+                Description = "Введите JWT токен"
             };
 
             c.AddSecurityDefinition("Bearer", securityScheme);
