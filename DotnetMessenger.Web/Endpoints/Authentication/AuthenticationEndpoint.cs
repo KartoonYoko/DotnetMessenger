@@ -22,7 +22,8 @@ public static class AuthenticationEndpoint
             .WithSummary("Register");
         group
             .MapPost("/login", Login)
-            .WithSummary("Login");
+            .WithSummary("Login")
+            .Produces<UnauthorizedLoginError>(401);
         group
             .MapPost("/logout", Logout)
             .WithSummary("Logout")
@@ -111,10 +112,9 @@ public static class AuthenticationEndpoint
             {
                 s.AddEvent("not successful login");
                 s.SetAttribute("user.login", request.Login);
-                
-                return TypedResults.Problem(
-                    type: "not authorized",
-                    statusCode: 401);
+
+                return TypedResults.Problem(new UnauthorizedLoginError(
+                    new UnauthorizedLoginError.ExtensionExampleObject("some value")));
             }
             
             s.RecordException(ex);
@@ -122,4 +122,21 @@ public static class AuthenticationEndpoint
             throw;
         }
     }
+}
+
+internal class UnauthorizedLoginError : ProblemDetails
+{
+    internal UnauthorizedLoginError(ExtensionExampleObject extensionExample)
+    {
+        ExtensionExample = extensionExample;
+        Title = "NotAuthorized";
+        Status = 401;
+    }
+
+    public class ExtensionExampleObject(string value)
+    {
+        public string Value { get; set; } = value;
+    }
+
+    public ExtensionExampleObject ExtensionExample { get; set; }
 }
