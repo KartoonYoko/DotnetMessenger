@@ -41,8 +41,10 @@ public static partial class Startup
                               | HttpLoggingFields.RequestProtocol
                               | HttpLoggingFields.ResponseStatusCode;
         });
+        
         services.AddHttpContextAccessor();
         services.AddDatabase(configuration);
+        services.AddApplicationProblemDetails(configuration);
         services.AddAuthenticationAndAuthorization(configuration);
         services.AddOpenApiConfiguration();
         services.ConfigureFeatureServices();

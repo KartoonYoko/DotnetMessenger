@@ -7,6 +7,7 @@ using DotnetMessenger.Web.Features.Authentication.Register;
 using DotnetMessenger.Web.Features.Authentication.Register.Errors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Trace;
 
 namespace DotnetMessenger.Web.Endpoints.Authentication;
 
@@ -86,11 +87,14 @@ public static class AuthenticationEndpoint
         }
     }
 
-    private static async Task<Results<Ok<LoginResponse>, UnauthorizedHttpResult>> Login(
+    private static async Task<Results<Ok<LoginResponse>, ProblemHttpResult>> Login(
         [FromServices] LoginFeature service,
+        [FromServices] Tracer tracer,
         [FromBody] LoginRequest request,
         CancellationToken cancellationToken)
     {
+        using var s = tracer.StartActiveSpan("AuthenticationEndpoint.Login");
+        
         try
         {
             var result = await service.LoginAsync(
@@ -101,8 +105,19 @@ public static class AuthenticationEndpoint
         }
         catch (LoginExceptionBase ex)
         {
+            s.SetStatus(Status.Error);
+
             if (ex is UnauthorizedException)
-                return TypedResults.Unauthorized();
+            {
+                s.AddEvent("not successful login");
+                s.SetAttribute("user.login", request.Login);
+                
+                return TypedResults.Problem(
+                    type: "not authorized",
+                    statusCode: 401);
+            }
+            
+            s.RecordException(ex);
 
             throw;
         }
