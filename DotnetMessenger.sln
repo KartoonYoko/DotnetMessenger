@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetMessenger.Web", "DotnetMessenger.Web\DotnetMessenger.Web.csproj", "{7FBA40DA-C3F4-4E14-9035-AE2D1608EC53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetMessenger.Web", "src\DotnetMessenger.Web\DotnetMessenger.Web.csproj", "{7FBA40DA-C3F4-4E14-9035-AE2D1608EC53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetMessenger.Web.Test", "DotnetMessenger.Web.Test\DotnetMessenger.Web.Test.csproj", "{BF00A5E5-8AD3-4366-B09B-BFBC1C2F107C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetMessenger.Web.Test", "tests\DotnetMessenger.Web.Test\DotnetMessenger.Web.Test.csproj", "{BF00A5E5-8AD3-4366-B09B-BFBC1C2F107C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
