@@ -28,7 +28,7 @@ public class AuthenticationEndpointTests(
     }
     
     [Fact]
-    public async Task Should_RegisterReturnsCreated()
+    public async Task Should_RegisterReturnsOk()
     {
         var url = $"{factory.Server.BaseAddress}api/authentication/register";
         
