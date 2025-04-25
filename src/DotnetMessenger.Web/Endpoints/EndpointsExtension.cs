@@ -2,8 +2,6 @@
 using DotnetMessenger.Web.Endpoints.Chat;
 using DotnetMessenger.Web.Endpoints.Chats;
 using DotnetMessenger.Web.Endpoints.Users;
-using Microsoft.AspNetCore.HttpLogging;
-using OpenTelemetry.Trace;
 
 namespace DotnetMessenger.Web.Endpoints;
 

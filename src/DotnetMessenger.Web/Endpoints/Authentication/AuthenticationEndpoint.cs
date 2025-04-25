@@ -19,23 +19,28 @@ public static class AuthenticationEndpoint
 
         group
             .MapPost("/register", Register)
-            .WithSummary("Register");
+            .WithSummary("Register")
+            .WithDescription("Возможные типы ошибок: LoginAlreadyExists 409")
+            .ProducesProblem(409);
         group
             .MapPost("/login", Login)
             .WithSummary("Login")
-            .Produces<UnauthorizedLoginError>(401);
+            .WithDescription("Возможные типы ошибок: UnauthorizedLoginError 401")
+            .Produces<ProblemDetails>(401);
         group
             .MapPost("/logout", Logout)
             .WithSummary("Logout")
             .RequireAuthorization();
         group
             .MapPost("/refresh-token", RefreshToken)
-            .WithSummary("Refresh token");
+            .WithSummary("Refresh token")
+            .WithDescription("Возможные типы ошибок: RefreshTokenOrUserNotFound 404")
+            .ProducesProblem(404);
 
         return group;
     }
     
-    private static async Task<Results<Ok<RefreshTokensResponse>, NotFound>> RefreshToken(
+    private static async Task<Results<Ok<RefreshTokensResponse>, ProblemHttpResult>> RefreshToken(
         [FromServices] RefreshTokensFeature service,
         [FromBody] RefreshTokensRequest request,
         CancellationToken cancellationToken)
@@ -50,7 +55,11 @@ public static class AuthenticationEndpoint
         }
         catch (RefreshTokenOrUserNotFoundException)
         {
-            return TypedResults.NotFound();
+            return TypedResults.Problem(new ProblemDetails
+            {
+                Type = "RefreshTokenOrUserNotFound",
+                Status = 404,
+            });
         }
     }
     
@@ -66,7 +75,7 @@ public static class AuthenticationEndpoint
         return TypedResults.Ok();
     }
 
-    private static async Task<Results<Ok<RegisterResponse>, Conflict>> Register(
+    private static async Task<Results<Ok<RegisterResponse>, ProblemHttpResult>> Register(
         [FromServices] RegisterFeature service,
         [FromBody] RegisterRequest request,
         CancellationToken cancellationToken)
@@ -82,7 +91,11 @@ public static class AuthenticationEndpoint
         catch (RegisterExceptionBase ex)
         {
             if (ex is LoginAlreadyExistsException)
-                return TypedResults.Conflict();
+                return TypedResults.Problem(new ProblemDetails
+                {
+                    Type = "LoginAlreadyExists",
+                    Status = 409,
+                });
 
             throw;
         }
@@ -113,8 +126,11 @@ public static class AuthenticationEndpoint
                 s.AddEvent("not successful login");
                 s.SetAttribute("user.login", request.Login);
 
-                return TypedResults.Problem(new UnauthorizedLoginError(
-                    new UnauthorizedLoginError.ExtensionExampleObject("some value")));
+                return TypedResults.Problem(new ProblemDetails
+                {
+                    Type = "Unauthorized",
+                    Status = 401,
+                });
             }
             
             s.RecordException(ex);
@@ -122,21 +138,4 @@ public static class AuthenticationEndpoint
             throw;
         }
     }
-}
-
-internal class UnauthorizedLoginError : ProblemDetails
-{
-    internal UnauthorizedLoginError(ExtensionExampleObject extensionExample)
-    {
-        ExtensionExample = extensionExample;
-        Title = "NotAuthorized";
-        Status = 401;
-    }
-
-    public class ExtensionExampleObject(string value)
-    {
-        public string Value { get; set; } = value;
-    }
-
-    public ExtensionExampleObject ExtensionExample { get; set; }
 }
